@@ -5,7 +5,9 @@ import { Levels } from "./Scene/Levels";
 import { PlayerShip } from "./Scene/PlayerShip";
 import { Level1Scene } from "./Scene/Level1Scene";
 import { Level2Scene } from "./Scene/Level2Scene";
-import { LevelCompleted } from "./Scene/LevelCompleted";
+import { Level3Scene } from "./Scene/Level3Scene";
+import { Level1Completed } from "./Scene/Level1Completed";
+import { Level2Completed } from "./Scene/Level2Completed";
 
 class Scene1 extends Phaser.Scene {
   private explosion;
@@ -152,14 +154,6 @@ class Scene2 extends Phaser.Scene {
     );
     this.background.setOrigin(0, 0);
 
-    // this.playerShip = this.physics.add.sprite(
-    //   config.width / 2,
-    //   config.height - 150,
-    //   "playerShip"
-    // );
-
-    this.speed = 10;
-
     this.cursorKeys = this.input.keyboard.createCursorKeys();
 
     this.enemy1 = new EnemySmallShip(this, "enemy1");
@@ -173,15 +167,8 @@ class Scene2 extends Phaser.Scene {
     this.enemies.add(this.enemy2);
     this.enemies.add(this.enemy3);
     this.enemies.add(this.boss);
-    this.playerShip = new PlayerShip(this, "playerShip", this.enemies);
+    this.playerShip = new PlayerShip(this, "playerShip", 0, this.enemies);
 
-    this.level = new Levels(
-      this.playerShip.getPlayer(),
-      [this.enemy1, this.enemy2, this.enemy3],
-      this.boss
-    );
-
-    this.level.defaultStats();
     this.scoreText = this.add.text(
       20,
       20,
@@ -303,7 +290,15 @@ export const config = {
   backgroundColor: "black",
   width: 1200,
   height: 900,
-  scene: [Scene1, Level1Scene, Level2Scene, LevelCompleted, GameOver],
+  scene: [
+    Scene1,
+    Level1Scene,
+    Level2Scene,
+    Level3Scene,
+    Level1Completed,
+    Level2Completed,
+    GameOver,
+  ],
   physics: {
     default: "arcade",
     arcade: {

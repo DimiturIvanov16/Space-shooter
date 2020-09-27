@@ -70,7 +70,9 @@ export class Level1Scene extends Phaser.Scene {
     this.enemies.add(this.enemy1);
     this.enemies.add(this.enemy2);
     this.enemies.add(this.enemy3);
-    this.playerShip = new PlayerShip(this, "playerShip", this.enemies);
+    this.playerShip = new PlayerShip(this, "playerShip", 0, this.enemies);
+
+    this.playerShip.setEnemies(this.enemies);
 
     this.level = new Levels(this.playerShip.getPlayer(), [
       this.enemy1,

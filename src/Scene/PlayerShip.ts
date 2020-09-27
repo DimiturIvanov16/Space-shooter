@@ -9,6 +9,7 @@ import { Explosion } from "./Explosion";
 export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
   private player: Player;
   private cursorKeys;
+  private level: number;
   private bullets: Phaser.Physics.Arcade.Group;
   private bullet1: Bullet;
   private bullet2: Bullet;
@@ -30,21 +31,15 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
   private scoreText: Phaser.GameObjects.Text;
   private levelCompleted: Phaser.GameObjects.Text;
 
-  constructor(scene: Phaser.Scene, texture: string, enemies) {
+  constructor(scene: Phaser.Scene, texture: string, level: number, enemies) {
     super(scene, config.width / 2, config.height - 150, texture);
     scene.physics.world.enable(this);
     this.setCollideWorldBounds(true);
     this.setScale(0.05);
     this.cursorKeys = scene.input.keyboard.createCursorKeys();
-    this.player = new Player();
-    this.enemies = enemies;
-    this.playerCollision = this.scene.physics.add.overlap(
-      this,
-      this.enemies,
-      this.hitPlayer,
-      null,
-      this
-    );
+    this.level = level;
+    this.player = new Player(this.level);
+    this.scene.physics.add.overlap(this, enemies, this.hitPlayer, null, this);
     this.scoreText = this.scene.add.text(
       20,
       20,
@@ -61,6 +56,10 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
 
   public getPlayer(): Player {
     return this.player;
+  }
+
+  public setEnemies(enemies: Phaser.Physics.Arcade.Group) {
+    this.enemies = enemies;
   }
 
   public getPlayerLifesText() {
@@ -169,37 +168,48 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
     bullet.setVelocityY(0);
     bullet.y -= 60;
     bullet.setScale(0.5);
+    bullet.play("explode");
+    this.explosion = this.scene.physics.add.sprite(
+      bullet.x,
+      bullet.y,
+      "explosion"
+    );
+    this.explosion.play("explode");
+    bullet.disableBody(true, false);
     setTimeout(() => {
       bullet.destroy();
     }, 150);
-    bullet.play("explode");
-
     if (bullet.getDamage() < enemy.getHealth()) {
       enemy.setHealth(enemy.getHealth() - bullet.getDamage());
-    } else {
+    }
+    if (bullet.getDamage() >= enemy.getHealth()) {
       enemy.resetEnemy();
+      enemy.setDefaultHeath();
       this.player.setScore(this.player.getScore() + 100);
       this.scoreText.text = `Points: ${this.player.getScore().toString()}`;
     }
 
-    if (this.player.getScore() >= 200) {
+    if (this.player.getScore() >= 1000) {
       this.levelCompleted = this.scene.add.text(
         config.width / 2,
         20,
-        "LEVEL 1 COMPLETED"
+        "LEVEL " + this.player.getLevel() + " COMPLETED"
       );
+      this.scene.scene.stop();
+      this.player.setLevel(this.player.getLevel() + 1);
+      this.scene.scene.scene.scene.start(
+        "Level" + this.player.getLevel() + "Completed"
+      );
+      this.player.setScore(0);
+      console.log(this.player.getLevel());
       this.scene.add.existing(this);
-      this.scene.scene.scene.scene.start("LevelCompleted");
     }
-    setTimeout(() => {}, 3000);
   }
 
   public hitPlayer(player: PlayerShip) {
     player.getPlayer().setLives(player.getPlayer().getLives() - 1);
     this.playerLifesText.text = `Lives: ${this.player.getLives().toString()}`;
 
-    player.x = config.width / 2;
-    player.y = config.height - 150;
     this.resetPlayer = this.scene.add.tween({
       targets: this,
       alpha: { from: 0, to: 1 },

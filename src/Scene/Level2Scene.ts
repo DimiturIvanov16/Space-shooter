@@ -1,5 +1,6 @@
 import { config } from "../game";
 import { Boss } from "./Boss";
+import { EnemyBigShip } from "./EnemyBigShip";
 import { EnemySmallShip } from "./EnemyShip";
 import { HealthSupplies } from "./HealthSupplies";
 import { Levels } from "./Levels";
@@ -11,7 +12,7 @@ export class Level2Scene extends Phaser.Scene {
   private enemy1: EnemySmallShip;
   private enemy2: EnemySmallShip;
   private enemy3: EnemySmallShip;
-  private enemy4: EnemySmallShip;
+  private enemy4: EnemyBigShip;
   private level: Levels;
   private playerCollision: Phaser.Physics.Arcade.Collider;
   private enemies: Phaser.Physics.Arcade.Group;
@@ -60,32 +61,37 @@ export class Level2Scene extends Phaser.Scene {
 
     this.cursorKeys = this.input.keyboard.createCursorKeys();
 
+    this.playerShip = new PlayerShip(this, "playerShip", 1, this.enemies);
     this.enemy1 = new EnemySmallShip(this, "enemy1");
     this.enemy2 = new EnemySmallShip(this, "enemy2");
     this.enemy3 = new EnemySmallShip(this, "enemy3");
-    this.enemy4 = new EnemySmallShip(this, "enemy4");
+    this.enemy4 = new EnemyBigShip(this, "enemy4");
+    this.enemy4.setPlayer(this.playerShip);
     this.enemy1.setScale(0.15);
     this.enemy2.setScale(0.1);
     this.enemy3.setScale(0.2);
+    this.enemy4.setScale(0.2);
 
     this.enemies = this.physics.add.group();
     this.enemies.add(this.enemy1);
     this.enemies.add(this.enemy2);
     this.enemies.add(this.enemy3);
-    this.playerShip = new PlayerShip(this, "playerShip", this.enemies);
-
+    this.enemies.add(this.enemy4);
+    this.playerShip.setEnemies(this.enemies);
     this.level = new Levels(this.playerShip.getPlayer(), [
       this.enemy1,
       this.enemy2,
       this.enemy3,
-      this.enemy4,
     ]);
 
     this.level.defaultStats();
 
-    this.helpTimer = setInterval(() => {
-      this.trowLife();
-    }, 10000);
+    this.helpTimer = this.time.addEvent({
+      delay: 10000,
+      loop: true,
+      callback: this.trowLife,
+      callbackScope: this,
+    });
   }
 
   playerStats() {

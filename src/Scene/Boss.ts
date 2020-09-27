@@ -10,8 +10,8 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
   private bullets: Phaser.Physics.Arcade.Group;
   private bulletTexture: string;
   private movement: Phaser.Tweens.Tween;
-  private alive: boolean = false;
-  private health: number = 50;
+  private alive: boolean = true;
+  private health: number = 5;
   private playerShip: PlayerShip;
   private attack1;
   private attack2;
@@ -75,7 +75,13 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
         this.bullets.add(this.bullet2);
         this.bullets.setVelocityY(600);
 
-        this.collision();
+        this.scene.physics.add.overlap(
+          this.playerShip,
+          this.bullets,
+          this.playerShip.hitPlayer,
+          null,
+          this.playerShip
+        );
       }, 500);
       setTimeout(() => {
         clearInterval(this.attack1);
@@ -96,11 +102,14 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
             this.bullets = this.scene.physics.add.group();
             this.bullets.add(this.bullet1);
             this.bullets.add(this.bullet2);
-            this.bullets = this.scene.physics.add.group();
-            this.bullets.add(this.bullet1);
-            this.bullets.add(this.bullet2);
             this.bullets.setVelocityY(600);
-            this.collision();
+            this.scene.physics.add.overlap(
+              this.playerShip,
+              this.bullets,
+              this.playerShip.hitPlayer,
+              null,
+              this.playerShip
+            );
           }, 1000);
         }, 300);
       }, 6000);
@@ -118,6 +127,10 @@ export class Boss extends Phaser.Physics.Arcade.Sprite {
     if (this.health <= 0) {
       this.destroy();
     }
+  }
+
+  public setDefaultHeath() {
+    return 1;
   }
 
   public resetEnemy() {

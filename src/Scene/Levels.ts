@@ -1,13 +1,15 @@
 import { Boss } from "./Boss";
+import { EnemyBigShip } from "./EnemyBigShip";
 import { EnemySmallShip } from "./EnemyShip";
 import { Player } from "./Player";
 
 export class Levels {
   private player: Player;
   private enemySmallShips: EnemySmallShip[];
+  private enemyBigShip: EnemyBigShip;
   private boss?: Boss;
 
-  constructor(player: Player, enemySmallShips: EnemySmallShip[], boss?: Boss) {
+  constructor(player: Player, enemySmallShips?: EnemySmallShip[], boss?: Boss) {
     this.player = player;
     this.enemySmallShips = enemySmallShips;
     this.boss = boss;
@@ -41,6 +43,9 @@ export class Levels {
   public setLevels(): void {
     if (this.player.getScore() > 1000) {
       this.level2();
+    }
+    if (this.player.getScore() > 2000) {
+      this.level3();
     }
     if (this.player.getScore() > 2000) {
       this.level3();
