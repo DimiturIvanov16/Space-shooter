@@ -1,4 +1,5 @@
 import { config } from "../../game";
+import { Boss } from "../Enemies/Boss";
 import { Bullet } from "../items/Bullet";
 import { Rocket } from "../items/Rocket";
 import { Player } from "./Player";
@@ -239,18 +240,61 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
       enemy.setHealth(enemy.getHealth() - bullet.getDamage());
     }
     if (bullet.getDamage() >= enemy.getHealth()) {
-      enemy.resetEnemy();
-      enemy.setDefaultHeath();
-      this.player.setScore(this.player.getScore() + 100);
-      this.scoreText.text = `Points: ${this.player.getScore().toString()}`;
-    }
+      if (enemy instanceof Boss) {
+        this.scene.scene.scene.scene.start("Level3Completed");
+      } else {
+        enemy.resetEnemy();
+        enemy.setDefaultHeath();
+        this.player.setScore(this.player.getScore() + 100);
+        this.scoreText.text = `Points: ${this.player.getScore().toString()}`;
+      }
 
-    if (this.player.getScore() >= 1000) {
-      this.levelCompleted = this.scene.add.text(
-        config.width / 2,
-        20,
-        "LEVEL " + this.player.getLevel() + " COMPLETED"
-      );
+      if (this.player.getScore() >= 1000) {
+        this.levelCompleted = this.scene.add.text(
+          config.width / 2,
+          20,
+          "LEVEL " + this.player.getLevel() + " COMPLETED"
+        );
+        this.scene.scene.stop();
+        this.player.setLevel(this.player.getLevel() + 1);
+        this.scene.scene.scene.scene.start(
+          "Level" + this.player.getLevel() + "Completed"
+        );
+        this.player.setScore(0);
+        console.log(this.player.getLevel());
+        this.scene.add.existing(this);
+      }
+    }
+  }
+
+  public hitBoss(bullet: Bullet, boss: Boss) {
+    this.shakeBackground();
+    this.shakeBackgroundTween.paused = false;
+    bullet.setVelocityY(0);
+    bullet.y -= 60;
+    bullet.setScale(0.5);
+    bullet.play("explode");
+    this.explosion = this.scene.physics.add.sprite(
+      bullet.x,
+      bullet.y,
+      "explosion"
+    );
+    this.explosionSound = this.scene.sound.add("explosionSound");
+    this.explosionSoundConfig = {
+      mute: false,
+      volume: 0.1,
+      loop: false,
+    };
+    this.explosionSound.play(this.explosionSoundConfig);
+    this.explosion.play("explode");
+    bullet.disableBody(true, false);
+    setTimeout(() => {
+      bullet.destroy();
+    }, 150);
+    if (bullet.getDamage() < boss.getHealth()) {
+      boss.setHealth(boss.getHealth() - bullet.getDamage());
+    }
+    if (bullet.getDamage() >= boss.getHealth()) {
       this.scene.scene.stop();
       this.player.setLevel(this.player.getLevel() + 1);
       this.scene.scene.scene.scene.start(

@@ -43,7 +43,7 @@ export class Level1Completed extends Phaser.Scene {
     this.quitBtn.setInteractive();
     this.quitBtn.setFontSize(200);
     this.quitBtn.on("pointerdown", () => {
-      this.scene.start("bootGame");
+      this.scene.start("MenuScene");
     });
     this.quitBtn.on("pointerover", () => {
       this.quitBtn.setColor("yellow");

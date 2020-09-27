@@ -23,7 +23,7 @@ export class Level1Scene extends Phaser.Scene {
   private pew;
   private backgroundMusicConfig;
   private pewConfig;
-  private helpTimer;
+  private helpTimer: Phaser.Time.TimerEvent;
   constructor() {
     super("Level1Scene");
   }

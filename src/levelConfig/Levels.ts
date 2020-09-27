@@ -19,6 +19,10 @@ export class Levels {
     this.player.setLives(5);
     this.player.setScore(0);
     this.player.setSpeed(15);
+    for (let i = 0; i < this.enemySmallShips.length; i++) {
+      this.enemySmallShips[i].setMinSpeed(2);
+      this.enemySmallShips[i].setMaxSpeed(5);
+    }
   }
 
   public level2(): void {
@@ -30,6 +34,8 @@ export class Levels {
   }
 
   public level3(): void {
+    this.player.setLives(5);
+    this.player.setScore(0);
     this.player.setSpeed(25);
   }
   public setLevels(): void {

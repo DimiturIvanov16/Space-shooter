@@ -56,7 +56,7 @@ export class Level3Scene extends Phaser.Scene {
       this,
       "playerShip",
       2,
-      this.enemies,
+      this.boss,
       this.background
     );
 
@@ -66,7 +66,7 @@ export class Level3Scene extends Phaser.Scene {
     this.boss.shoot();
     this.level = new Levels(this.playerShip.getPlayer(), [this.enemy1], null);
 
-    this.level.defaultStats();
+    this.level.level3();
 
     this.helpTimer = setInterval(() => {
       this.trowLife();

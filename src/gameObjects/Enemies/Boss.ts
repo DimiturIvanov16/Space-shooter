@@ -34,7 +34,7 @@ export class Boss extends Phaser.Physics.Arcade.Sprite implements Enemy {
     this.movement = this.scene.tweens.add({
       targets: this,
       x: config.width - this.width / 4,
-      duration: 2000,
+      duration: 3000,
       ease: "Power0",
       yoyo: true,
       repeat: -1,
@@ -71,15 +71,6 @@ export class Boss extends Phaser.Physics.Arcade.Sprite implements Enemy {
     this.scene.time.delayedCall(24000, this.attack2Timer, [], this);
     this.scene.time.delayedCall(30000, this.attack3Timer, [], this);
     this.scene.time.delayedCall(36000, this.attack4Timer, [], this);
-
-    // this.attack1Timer = this.scene.time.addEvent({
-    //   delay
-    //   ,
-    //   loop: true,
-    //   callback: this.attack2,
-    //   callbackScope: this,
-    //   repeat: 6,
-    // });
   }
   public attack1Timer() {
     this.scene.time.addEvent({
@@ -134,13 +125,13 @@ export class Boss extends Phaser.Physics.Arcade.Sprite implements Enemy {
     this.bullets.add(this.bullet2);
     this.bullets.setVelocityY(600);
 
-    // this.scene.physics.add.overlap(
-    //   this.playerShip,
-    //   this.bullets,
-    //   this.playerShip.hitPlayer,
-    //   null,
-    //   this.playerShip
-    // );
+    this.scene.physics.add.overlap(
+      this.playerShip,
+      this.bullets,
+      this.playerShip.hitPlayer,
+      null,
+      this.playerShip
+    );
   }
 
   public setDefaultHeath(): number {

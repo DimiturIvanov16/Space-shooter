@@ -57,7 +57,7 @@ export class MenuScene extends Phaser.Scene {
     this.playBtn.setInteractive();
     this.playBtn.setFontSize(200);
     this.playBtn.on("pointerdown", () => {
-      this.scene.start("Level3Scene");
+      this.scene.start("Level1Scene");
     });
     this.playBtn.on("pointerover", () => {
       this.playBtn.setColor("yellow");
