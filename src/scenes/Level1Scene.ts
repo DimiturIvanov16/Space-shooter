@@ -35,10 +35,8 @@ export class Level1Scene extends Phaser.Scene {
       volume: 0.5,
       loop: true,
     };
-    // this.music.play(this.backgroundMusicConfig);
+    this.music.play(this.backgroundMusicConfig);
 
-    // 4.1 make the background a tile sprite
-    //this.background = this.add.image(0, 0, "background");
     this;
     this.background = this.add.tileSprite(
       0,
@@ -48,12 +46,6 @@ export class Level1Scene extends Phaser.Scene {
       "background"
     );
     this.background.setOrigin(0, 0);
-
-    // this.playerShip = this.physics.add.sprite(
-    //   config.width / 2,
-    //   config.height - 150,
-    //   "playerShip"
-    // );
 
     this.speed = 10;
 
@@ -77,13 +69,6 @@ export class Level1Scene extends Phaser.Scene {
       this.enemies,
       this.background
     );
-    this.tweens.add({
-      targets: this.background,
-      x: 10,
-      duration: 100,
-      repeat: 2,
-      yoyo: true,
-    });
 
     this.playerShip.setEnemies(this.enemies);
 

@@ -30,6 +30,14 @@ export class MenuScene extends Phaser.Scene {
       "assets/backgroundMusic.mp3",
       "assets/backgroundMusic.ogg",
     ]);
+    this.load.audio("rocketSound", [
+      "assets/Rocket Sound.mp3",
+      "assets/Rocket Sound.ogg",
+    ]);
+    this.load.audio("explosionSound", [
+      "assets/Explosion Sound.mp3",
+      "assets/Explosion Sound.ogg",
+    ]);
     this.load.audio("pew", ["assets/pew.mp3", "assets/pew.ogg"]);
     this.load.audio("gameOver", ["assets/gameover.mp3", "assets/gameover.ogg"]);
   }
@@ -49,7 +57,7 @@ export class MenuScene extends Phaser.Scene {
     this.playBtn.setInteractive();
     this.playBtn.setFontSize(200);
     this.playBtn.on("pointerdown", () => {
-      this.scene.start("Level1Scene");
+      this.scene.start("Level3Scene");
     });
     this.playBtn.on("pointerover", () => {
       this.playBtn.setColor("yellow");

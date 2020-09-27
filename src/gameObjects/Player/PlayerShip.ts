@@ -27,7 +27,16 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
   private bossCollision: Phaser.Physics.Arcade.Collider;
   private playerLifesText: Phaser.GameObjects.Text;
   private scoreText: Phaser.GameObjects.Text;
+  private rocketReady: Phaser.GameObjects.Text;
   private levelCompleted: Phaser.GameObjects.Text;
+  private pewSound: Phaser.Sound.BaseSound;
+  private pewSoundConfig: {};
+  private explosionSound: Phaser.Sound.BaseSound;
+  private explosionSoundConfig: {};
+  private rocketSound: Phaser.Sound.BaseSound;
+  private rocketSoundConfig: {};
+  private shootRockTimer: boolean = true;
+  private shakeBackgroundTween: Phaser.Tweens.Tween;
 
   constructor(
     scene: Phaser.Scene,
@@ -55,8 +64,14 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
       60,
       "Lifes: " + this.player.getLives()
     );
+    this.rocketReady = this.scene.add.text(
+      20,
+      100,
+      "Rocket: " + this.getRocketStatus()
+    );
     scene.add.existing(this);
     scene.add.existing(this.scoreText);
+    scene.add.existing(this.rocketReady);
   }
 
   public getPlayer(): Player {
@@ -69,6 +84,14 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
 
   public getPlayerLifesText() {
     return this.playerLifesText;
+  }
+
+  public getRocketStatus() {
+    if (this.shootRockTimer == true) {
+      return "Ready";
+    } else {
+      return "Reloading";
+    }
   }
 
   public playerControlls(): void {
@@ -133,26 +156,45 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
     }
   }
   shootRocket() {
-    this.rocket = new Rocket(this.scene, this.x, this.y - 50, "rocket");
-    // this.pew = this.sound.add("pew");
-    // this.pewConfig = {
-    //   mute: false,
-    //   volume: 0.1,
-    //   loop: false,
-    // };
-    // this.pew.play(this.pewConfig);
-    this.scene.physics.add.overlap(
-      this.rocket,
-      this.enemies,
-      this.hitEnemy,
-      null,
-      this
-    );
+    if (this.shootRockTimer) {
+      this.rocket = new Rocket(this.scene, this.x, this.y - 50, "rocket");
+      this.rocketSound = this.scene.sound.add("rocketSound");
+      this.rocketSoundConfig = {
+        mute: false,
+        volume: 0.1,
+        loop: false,
+      };
+      this.rocketSound.play(this.rocketSoundConfig);
+      this.scene.physics.add.overlap(
+        this.rocket,
+        this.enemies,
+        this.hitEnemy,
+        null,
+        this
+      );
+
+      this.scene.time.delayedCall(3000, this.canShoot, null, this);
+    }
+    this.shootRockTimer = false;
+    this.rocketReady.text = "Rocket: " + this.getRocketStatus();
+  }
+
+  public canShoot() {
+    this.shootRockTimer = true;
+    this.rocketReady.text = "Rocket: " + this.getRocketStatus();
   }
 
   public shootBullet() {
     this.bullet1 = new Bullet(this.scene, this.x - 30, this.y - 50, "bullet");
     this.bullet2 = new Bullet(this.scene, this.x + 30, this.y - 50, "bullet");
+    this.pewSound = this.scene.sound.add("pew");
+    this.pewSoundConfig = {
+      mute: false,
+      volume: 0.1,
+      loop: false,
+    };
+
+    this.pewSound.play(this.pewSoundConfig);
     this.bullets = this.scene.physics.add.group();
     this.bullets.add(this.bullet1);
     this.bullets.add(this.bullet2);
@@ -171,6 +213,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
 
   public hitEnemy(bullet: Bullet, enemy) {
     this.shakeBackground();
+    this.shakeBackgroundTween.paused = false;
     bullet.setVelocityY(0);
     bullet.y -= 60;
     bullet.setScale(0.5);
@@ -180,6 +223,13 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
       bullet.y,
       "explosion"
     );
+    this.explosionSound = this.scene.sound.add("explosionSound");
+    this.explosionSoundConfig = {
+      mute: false,
+      volume: 0.1,
+      loop: false,
+    };
+    this.explosionSound.play(this.explosionSoundConfig);
     this.explosion.play("explode");
     bullet.disableBody(true, false);
     setTimeout(() => {
@@ -252,12 +302,13 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
   }
 
   public shakeBackground() {
-    this.scene.tweens.add({
+    this.shakeBackgroundTween = this.scene.tweens.add({
       targets: this.background,
       x: 10,
       duration: 100,
       repeat: 2,
       yoyo: true,
+      paused: true,
     });
   }
 }

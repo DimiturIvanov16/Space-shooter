@@ -68,6 +68,7 @@ export class EnemyBigShip
   public shoot(): void {
     this.bullet = new Bullet(this.scene, this.x, this.y + 100, "bullet");
     this.bullet.setVelocityY(400);
+    this.bullet.setTintFill(0xff0000);
     this.scene.physics.add.overlap(
       this.playerShip,
       this.bullet,

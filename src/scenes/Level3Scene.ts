@@ -51,10 +51,7 @@ export class Level3Scene extends Phaser.Scene {
     this.cursorKeys = this.input.keyboard.createCursorKeys();
 
     this.boss = new Boss(this, "bullet");
-    this.enemy1 = new EnemySmallShip(this, "enemy1");
-    this.enemy1.setScale(0.15);
     this.enemies = this.physics.add.group();
-    this.enemies.add(this.enemy1);
     this.playerShip = new PlayerShip(
       this,
       "playerShip",
@@ -99,6 +96,5 @@ export class Level3Scene extends Phaser.Scene {
     this.playerShip.playerControlls();
     this.playerShip.playerMovment();
     this.level.setLevels();
-    this.enemy1.enemyMove();
   }
 }

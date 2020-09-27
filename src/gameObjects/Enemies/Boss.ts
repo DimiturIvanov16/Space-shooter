@@ -12,10 +12,8 @@ export class Boss extends Phaser.Physics.Arcade.Sprite implements Enemy {
   private bulletTexture: string;
   private movement: Phaser.Tweens.Tween;
   private alive: boolean = true;
-  private health: number = 5;
+  private health: number = 1000;
   private playerShip: PlayerShip;
-  private attack1;
-  private attack2;
   private shootCollision: Phaser.Physics.Arcade.Collider;
 
   constructor(scene: Phaser.Scene, bulletTexture: string) {
@@ -25,14 +23,23 @@ export class Boss extends Phaser.Physics.Arcade.Sprite implements Enemy {
     this.setAngle(180);
     this.setScale(0.5);
     this.enableBody(true, 200, 200, false, false);
-    this.movement = scene.tweens.add({
+    this.shoot();
+    this.scene.time.addEvent({
+      delay: 42000,
+      loop: true,
+      callback: this.shoot,
+      callbackScope: this,
+    });
+
+    this.movement = this.scene.tweens.add({
       targets: this,
       x: config.width - this.width / 4,
-      duration: 3000,
+      duration: 2000,
       ease: "Power0",
       yoyo: true,
       repeat: -1,
     });
+
     scene.add.existing(this);
   }
 
@@ -57,66 +64,83 @@ export class Boss extends Phaser.Physics.Arcade.Sprite implements Enemy {
   }
 
   public shoot(): void {
-    if ((this.alive = true)) {
-      this.attack1 = setInterval(() => {
-        this.bullet1 = new BulletBoss(
-          this.scene,
-          this.x + 200,
-          this,
-          this.bulletTexture
-        );
-        this.bullet2 = new BulletBoss(
-          this.scene,
-          this.x - 200,
-          this,
-          this.bulletTexture
-        );
-        this.bullets = this.scene.physics.add.group();
-        this.bullets.add(this.bullet1);
-        this.bullets.add(this.bullet2);
-        this.bullets.setVelocityY(600);
+    this.attack1Timer();
+    this.scene.time.delayedCall(6000, this.attack2Timer, [], this);
+    this.scene.time.delayedCall(12000, this.attack1Timer, [], this);
+    this.scene.time.delayedCall(18000, this.attack3Timer, [], this);
+    this.scene.time.delayedCall(24000, this.attack2Timer, [], this);
+    this.scene.time.delayedCall(30000, this.attack3Timer, [], this);
+    this.scene.time.delayedCall(36000, this.attack4Timer, [], this);
 
-        this.scene.physics.add.overlap(
-          this.playerShip,
-          this.bullets,
-          this.playerShip.hitPlayer,
-          null,
-          this.playerShip
-        );
-      }, 500);
-      setTimeout(() => {
-        clearInterval(this.attack1);
-        this.attack2 = setInterval(() => {
-          setTimeout(() => {
-            this.bullet1 = new BulletBoss(
-              this.scene,
-              this.x + 200,
-              this,
-              this.bulletTexture
-            );
-            this.bullet2 = new BulletBoss(
-              this.scene,
-              this.x - 200,
-              this,
-              this.bulletTexture
-            );
-            this.bullets = this.scene.physics.add.group();
-            this.bullets.add(this.bullet1);
-            this.bullets.add(this.bullet2);
-            this.bullets.setVelocityY(600);
-            this.scene.physics.add.overlap(
-              this.playerShip,
-              this.bullets,
-              this.playerShip.hitPlayer,
-              null,
-              this.playerShip
-            );
-          }, 1000);
-        }, 300);
-      }, 6000);
-    } else {
-      clearInterval(this.attack2);
-    }
+    // this.attack1Timer = this.scene.time.addEvent({
+    //   delay
+    //   ,
+    //   loop: true,
+    //   callback: this.attack2,
+    //   callbackScope: this,
+    //   repeat: 6,
+    // });
+  }
+  public attack1Timer() {
+    this.scene.time.addEvent({
+      delay: 1000,
+      callback: this.attack,
+      callbackScope: this,
+      repeat: 6,
+    });
+  }
+  public attack2Timer() {
+    this.scene.time.addEvent({
+      delay: 500,
+      callback: this.attack,
+      callbackScope: this,
+      repeat: 12,
+    });
+  }
+
+  public attack3Timer() {
+    this.scene.time.addEvent({
+      delay: 300,
+      callback: this.attack,
+      callbackScope: this,
+      repeat: 20,
+    });
+  }
+
+  public attack4Timer() {
+    this.scene.time.addEvent({
+      delay: 200,
+      callback: this.attack,
+      callbackScope: this,
+      repeat: 30,
+    });
+  }
+
+  public attack() {
+    this.bullet1 = new BulletBoss(
+      this.scene,
+      this.x + 200,
+      this,
+      this.bulletTexture
+    );
+    this.bullet2 = new BulletBoss(
+      this.scene,
+      this.x - 200,
+      this,
+      this.bulletTexture
+    );
+    this.bullets = this.scene.physics.add.group();
+    this.bullets.add(this.bullet1);
+    this.bullets.add(this.bullet2);
+    this.bullets.setVelocityY(600);
+
+    // this.scene.physics.add.overlap(
+    //   this.playerShip,
+    //   this.bullets,
+    //   this.playerShip.hitPlayer,
+    //   null,
+    //   this.playerShip
+    // );
   }
 
   public setDefaultHeath(): number {
