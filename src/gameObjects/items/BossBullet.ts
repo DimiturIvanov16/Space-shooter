@@ -1,5 +1,5 @@
-import { config } from "../../game";
-import { Boss } from "../Enemies/Boss";
+import { config } from '../../game';
+import { Boss } from '../Enemies/Boss';
 
 export class BulletBoss extends Phaser.Physics.Arcade.Sprite {
   private speed: number;
@@ -18,7 +18,7 @@ export class BulletBoss extends Phaser.Physics.Arcade.Sprite {
 
     if (this.y > config.height) {
       this.destroy();
-      console.log("deadBullet");
+      console.log('deadBullet');
     }
 
     scene.add.existing(this);

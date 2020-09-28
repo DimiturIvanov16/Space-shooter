@@ -1,4 +1,4 @@
-import { PlayerShip } from "./PlayerShip";
+import { PlayerShip } from './PlayerShip';
 
 export class PlayerControlls {
   private scene: Phaser.Scene;
@@ -6,32 +6,24 @@ export class PlayerControlls {
   private playerShip: PlayerShip;
   private cKey: Phaser.Input.Keyboard.Key;
   private spaceBar: Phaser.Input.Keyboard.Key;
-  private enter: Phaser.Input.Keyboard.Key;
   private pressLeft: boolean = false;
   private pressRight: boolean = false;
   private pressUp: boolean = false;
   private pressDown: boolean = false;
 
-  constructor(playerShip: PlayerShip, scene: Phaser.Scene, cursorKeys) {
+  constructor(playerShip: PlayerShip, scene: Phaser.Scene) {
     this.playerShip = playerShip;
     this.scene = scene;
     this.cursorKeys = scene.input.keyboard.createCursorKeys();
   }
 
   public playerControlls(): void {
-    this.spaceBar = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
+    this.spaceBar = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-    this.cKey = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.C
-    );
-    this.enter = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ENTER
-    );
+    this.cKey = this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
     if (this.cursorKeys.left.isDown) {
       this.pressLeft = true;
-      console.log("left");
+      console.log('left');
     }
     if (this.cursorKeys.right.isDown) {
       this.pressRight = true;

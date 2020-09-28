@@ -1,12 +1,10 @@
-import { Bullet } from "../items/Bullet";
-import { config } from "../../game";
-import { GameObject } from "../GameObject";
-import { PlayerShip } from "../Player/PlayerShip";
-import { Enemy } from "./Enemy";
+import { Bullet } from '../items/Bullet';
+import { config } from '../../game';
+import { GameObject } from '../GameObject';
+import { PlayerShip } from '../Player/PlayerShip';
+import { Enemy } from './Enemy';
 
-export class EnemyBigShip
-  extends Phaser.Physics.Arcade.Sprite
-  implements Enemy {
+export class EnemyBigShip extends Phaser.Physics.Arcade.Sprite implements Enemy {
   private speed: number;
   private health: number = 30;
   private bullet: Bullet;
@@ -28,7 +26,7 @@ export class EnemyBigShip
       targets: this,
       x: config.width - this.width / 4,
       duration: 3000,
-      ease: "Power0",
+      ease: 'Power0',
       yoyo: true,
       repeat: -1,
     });
@@ -66,16 +64,10 @@ export class EnemyBigShip
   }
 
   public shoot(): void {
-    this.bullet = new Bullet(this.scene, this.x, this.y + 100, "bullet");
+    this.bullet = new Bullet(this.scene, this.x, this.y + 100, 'bullet');
     this.bullet.setVelocityY(400);
     this.bullet.setTintFill(0xff0000);
-    this.scene.physics.add.overlap(
-      this.playerShip,
-      this.bullet,
-      this.playerShip.hitPlayer,
-      null,
-      this.playerShip
-    );
+    this.scene.physics.add.overlap(this.playerShip, this.bullet, this.playerShip.hitPlayer, null, this.playerShip);
     if (this.bullet.y > config.height) {
       this.bullet.destroy();
     }

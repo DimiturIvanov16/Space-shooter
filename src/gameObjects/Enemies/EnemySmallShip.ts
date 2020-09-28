@@ -1,10 +1,8 @@
-import { config } from "../../game";
-import { GameObject } from "../GameObject";
-import { Enemy } from "./Enemy";
+import { config } from '../../game';
+import { GameObject } from '../GameObject';
+import { Enemy } from './Enemy';
 
-export class EnemySmallShip
-  extends Phaser.Physics.Arcade.Sprite
-  implements Enemy {
+export class EnemySmallShip extends Phaser.Physics.Arcade.Sprite implements Enemy {
   private minSpeed: number;
   private maxSpeed: number;
   private health: number = 15;

@@ -1,4 +1,4 @@
-import { config } from "../game";
+import { config } from '../game';
 
 export class Level2Completed extends Phaser.Scene {
   private gameOverImage: Phaser.GameObjects.Image;
@@ -8,7 +8,7 @@ export class Level2Completed extends Phaser.Scene {
   private playBtn;
   private quitBtn;
   constructor() {
-    super("Level2Completed");
+    super('Level2Completed');
   }
   create() {
     // this.gameOverSoundConfig = {
@@ -17,39 +17,35 @@ export class Level2Completed extends Phaser.Scene {
     //   loop: false,
     // };
     // this.gameOverSound.play(this.gameOverSoundConfig);
-    this.LevelCompleted = this.add.text(
-      config.width / 2,
-      200,
-      "Level 2 Completed"
-    );
+    this.LevelCompleted = this.add.text(config.width / 2, 200, 'Level 2 Completed');
     this.LevelCompleted.setFontSize(100);
     this.LevelCompleted.setOrigin(0.5);
-    this.playBtn = this.add.text(config.width / 2, 600, "PLAY");
+    this.playBtn = this.add.text(config.width / 2, 600, 'PLAY');
     this.playBtn.setInteractive();
     this.playBtn.setFontSize(200);
-    this.playBtn.on("pointerdown", () => {
+    this.playBtn.on('pointerdown', () => {
       this.scene.setVisible(false);
-      this.scene.start("Level3Scene");
+      this.scene.start('Level3Scene');
     });
-    this.playBtn.on("pointerover", () => {
-      this.playBtn.setColor("yellow");
+    this.playBtn.on('pointerover', () => {
+      this.playBtn.setColor('yellow');
     });
-    this.playBtn.on("pointerout", () => {
-      this.playBtn.setColor("white");
+    this.playBtn.on('pointerout', () => {
+      this.playBtn.setColor('white');
     });
     this.playBtn.setOrigin(0.5);
 
-    this.quitBtn = this.add.text(config.width / 2, 800, "QUIT");
+    this.quitBtn = this.add.text(config.width / 2, 800, 'QUIT');
     this.quitBtn.setInteractive();
     this.quitBtn.setFontSize(200);
-    this.quitBtn.on("pointerdown", () => {
-      this.scene.start("MenuScene");
+    this.quitBtn.on('pointerdown', () => {
+      this.scene.start('MenuScene');
     });
-    this.quitBtn.on("pointerover", () => {
-      this.quitBtn.setColor("yellow");
+    this.quitBtn.on('pointerover', () => {
+      this.quitBtn.setColor('yellow');
     });
-    this.quitBtn.on("pointerout", () => {
-      this.quitBtn.setColor("white");
+    this.quitBtn.on('pointerout', () => {
+      this.quitBtn.setColor('white');
     });
     this.quitBtn.setOrigin(0.5);
   }

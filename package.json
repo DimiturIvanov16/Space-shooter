@@ -10,7 +10,9 @@
   },
   "author": "",
   "license": "",
-  "dependencies": {},
+  "dependencies": {
+    "@pixelburp/phaser3-health-bar": "^0.1.6"
+  },
   "devDependencies": {
     "@rollup/plugin-replace": "^2.3.0",
     "phaser": "^3.22.0",

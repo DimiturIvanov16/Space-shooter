@@ -1,4 +1,4 @@
-import { EnemySmallShip } from "../Enemies/EnemySmallShip";
+import { EnemySmallShip } from '../Enemies/EnemySmallShip';
 
 export class Rocket extends Phaser.Physics.Arcade.Sprite {
   private speed: number = 600;
@@ -24,6 +24,6 @@ export class Rocket extends Phaser.Physics.Arcade.Sprite {
     rocket.destroy();
     enemy.resetEnemy();
 
-    console.log("hitEnemy");
+    console.log('hitEnemy');
   }
 }

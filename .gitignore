@@ -1,13 +1,34 @@
-# System and IDE files
-Thumbs.db
-.DS_Store
-.idea
-*.suo
-*.sublime-project
-*.sublime-workspace
 
-# Vendors
+### JetBrains
+.idea/
+
+### VS Code
+.vscode/
+
+### Node
 node_modules/
+build/
 
-# Build
-/npm-debug.log
+### Logs
+#*.log
+
+### OS
+.DS_Store
+
+### Project specific
+#
+
+*.suo
+*.js.map
+*.js
+
+!rollup.*.js
+!gruntfile.js
+!gulpfile.js
+!*.json
+!sprintf.js
+!*Tests/
+!*test/
+
+### Build
+/dist
