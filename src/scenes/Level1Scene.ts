@@ -19,7 +19,7 @@ export class Level1Scene extends Phaser.Scene {
   private speed: number;
   private playerLifesText: Phaser.GameObjects.Text;
   private healthSupply: HealthSupplies;
-  private music;
+  private music: Phaser.Sound.BaseSound;
   private pew;
   private backgroundMusicConfig;
   private pewConfig;
@@ -35,7 +35,9 @@ export class Level1Scene extends Phaser.Scene {
       volume: 0.5,
       loop: true,
     };
-    this.music.play(this.backgroundMusicConfig);
+    if (!this.music.isPlaying) {
+      this.music.play(this.backgroundMusicConfig);
+    }
 
     this;
     this.background = this.add.tileSprite(0, 0, config.width, config.height, 'background');

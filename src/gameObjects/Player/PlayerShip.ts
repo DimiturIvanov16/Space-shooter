@@ -1,3 +1,4 @@
+import { Time } from 'phaser';
 import { config } from '../../game';
 import { Boss } from '../Enemies/Boss';
 import { Bullet } from '../items/Bullet';
@@ -16,6 +17,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
   private bullet2: Bullet;
   private rocket: Rocket;
   private explosion: Phaser.Physics.Arcade.Sprite;
+  private resetTimeOut;
 
   private cursorKeys;
   private cKey: Phaser.Input.Keyboard.Key;
@@ -147,7 +149,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
       this.rocketSound = this.scene.sound.add('rocketSound');
       this.rocketSoundConfig = {
         mute: false,
-        volume: 0.1,
+        volume: 0.2,
         loop: false,
       };
       this.rocketSound.play(this.rocketSoundConfig);
@@ -170,7 +172,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
     this.pewSound = this.scene.sound.add('pew');
     this.pewSoundConfig = {
       mute: false,
-      volume: 0.1,
+      volume: 0.05,
       loop: false,
     };
 
@@ -192,7 +194,6 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
     bullet.setVelocityY(0);
     bullet.y -= 60;
     bullet.setScale(0.5);
-    bullet.play('explode');
 
     this.explosion = this.scene.physics.add.sprite(bullet.x, bullet.y, 'explosion');
     this.explosionSound = this.scene.sound.add('explosionSound');
@@ -203,11 +204,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
     };
     this.explosionSound.play(this.explosionSoundConfig);
     this.explosion.play('explode');
-    bullet.disableBody(true, false);
-
-    setTimeout(() => {
-      bullet.destroy();
-    }, 150);
+    bullet.destroy();
 
     if (bullet.getDamage() < enemy.getHealth()) {
       enemy.setHealth(enemy.getHealth() - bullet.getDamage());
@@ -236,6 +233,15 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
   public hitPlayer(player: PlayerShip) {
     player.getPlayer().setLives(player.getPlayer().getLives() - 1);
     this.playerLifesText.text = `Lives: ${this.player.getLives().toString()}`;
+    this.explosion = this.scene.physics.add.sprite(player.x, player.y, 'explosion');
+    this.explosionSound = this.scene.sound.add('explosionSound');
+    this.explosionSoundConfig = {
+      mute: false,
+      volume: 0.1,
+      loop: false,
+    };
+    this.explosionSound.play(this.explosionSoundConfig);
+    this.explosion.play('explode');
 
     this.resetPlayer = this.scene.add.tween({
       targets: this,
@@ -252,7 +258,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
     this.spaceBar.enabled = false;
     this.cKey.enabled = false;
 
-    setTimeout(() => {
+    this.resetTimeOut = setTimeout(() => {
       this.resetPlayer.stop();
       this.spaceBar.enabled = true;
       this.cKey.enabled = true;
@@ -264,6 +270,7 @@ export class PlayerShip extends Phaser.Physics.Arcade.Sprite {
       // this.music.stop();
       this.active = false;
       this.scene.scene.stop();
+      clearTimeout(this.resetTimeOut);
       this.scene.scene.scene.scene.start('GameOverScene');
     }
   }
